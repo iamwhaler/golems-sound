@@ -5,7 +5,6 @@ $(document).ready(function() {
         'Ambient': {
                 speed: 1,
                 octave: 4,
-                playing: 0,
                 file: './ambient-sound/night.mp3'
 
             },
@@ -13,7 +12,6 @@ $(document).ready(function() {
         'Battle': {
                 speed: 1,
                 octave: 4,
-                playing: 0,
                 file: './ambient-sound/day.mp3'
             },
         
@@ -26,8 +24,8 @@ $(document).ready(function() {
 
 
     let gainNode = audioContext.createGain();
-    let source = audioContext.createMediaStreamSource(stream);
-    source.connect(gainNode);
+ //   let source = audioContext.createMediaStreamSource(stream);
+  //  source.connect(gainNode);
     gainNode.gain.value = 0.4;
     gainNode.connect(audioContext.destination);
 
@@ -75,18 +73,16 @@ $(document).ready(function() {
                 sourceNode.loop = true;
                 sourceNode.connect(audioContext.destination);
                 sourceNode.start();
-                SAMPLE_LIBRARY[environment].playing = 1;
 
             })
             .catch(e => console.error(e));
     };
 
     let stopSound = function (environment) {
-        let playingSound = SAMPLE_LIBRARY[environment].playing;
-        if (playingSound = 1) {
+
             sourceNode.stop();
             sourceNode = null;
-        }
+
     };
 
     $('#trigger').click(function () {
