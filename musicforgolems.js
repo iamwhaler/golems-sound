@@ -6,7 +6,7 @@ $(document).ready(function() {
                 speed: 1,
                 octave: 4,
                 playing: 0,
-                file: './Samples/Cello/cello-a2.wav'
+                file: './ambient-sound/night.mp3'
 
             },
 
@@ -18,12 +18,18 @@ $(document).ready(function() {
             },
         
         'Structure': {
-            text: 'structure integrity compromised'
+            text: 'structure integrity compromised',
         }
     };
 
     let audioContext = new AudioContext();
 
+
+    let gainNode = audioContext.createGain();
+    let source = audioContext.createMediaStreamSource(stream);
+    source.connect(gainNode);
+    gainNode.gain.value = 0.4;
+    gainNode.connect(audioContext.destination);
 
     let playSound = function (environment) {
 
@@ -34,12 +40,15 @@ $(document).ready(function() {
             .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
 
+                AudioBufferSourceNode.playbackRate
                 sourceNode = audioContext.createBufferSource();
                 sourceNode.buffer = audioBuffer;
                 sourceNode.loop = false;
                 sourceNode.connect(audioContext.destination);
                 sourceNode.start();
                 SAMPLE_LIBRARY[environment].playing = 1;
+
+
             })
             .catch(e => console.error(e));
     };
@@ -49,6 +58,9 @@ $(document).ready(function() {
         let file = SAMPLE_LIBRARY[environment].file;
 
         if(sourceNode!=null){
+            for(i=1; i>10; i++) {
+                setTimeout( () => function() {})
+            }
             sourceNode.stop();
             sourceNode = null;
         }
@@ -72,13 +84,13 @@ $(document).ready(function() {
     let stopSound = function (environment) {
         let playingSound = SAMPLE_LIBRARY[environment].playing;
         if (playingSound = 1) {
-            sourceNode.stop()
+            sourceNode.stop();
             sourceNode = null;
         }
     };
 
     $('#trigger').click(function () {
-        playSound('Ambient')
+        loopSound('Ambient')
     });
 
     $('#trigger-n').click(() => loopSound('Battle'));
